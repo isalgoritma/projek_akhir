@@ -156,19 +156,35 @@ def input_waktu():
 def hitung_fokus_preferensi(profil_anak, waktu_tersedia):
     estimasi = hitung_estimasi_fokus(profil_anak['umur'])
     
-    aktivitas_sesuai = [act for act in aktivitas if act['kategori'] == profil_anak['kategori_favorit']]
+    aktivitas_sesuai = []
+    for act in aktivitas:
+        if act['kategori'] == profil_anak['kategori_favorit']:
+            aktivitas_sesuai.append(act)
     
-    aktivitas_fokus = [act for act in aktivitas_sesuai if act['durasi'] <= estimasi['durasi_fokus_max']]
+    aktivitas_fokus = []
+    for act in aktivitas_sesuai:
+        if act['durasi'] <= estimasi['durasi_fokus_max']:
+            aktivitas_fokus.append(act)
     
     if not aktivitas_fokus:
-        aktivitas_fokus = [act for act in aktivitas if act['durasi'] <= estimasi['durasi_fokus_max']]
+        for act in aktivitas:
+            if act['durasi'] <= estimasi['durasi_fokus_max']:
+                aktivitas_fokus.append(act)
     
-    aktivitas_waktu = [act for act in aktivitas_fokus if act['durasi'] <= waktu_tersedia]
+    aktivitas_waktu = []
+    for act in aktivitas_fokus:
+        if act['durasi'] <= waktu_tersedia:
+            aktivitas_waktu.append(act)
     
     if not aktivitas_waktu:
-        aktivitas_waktu = sorted(aktivitas, key=lambda x: x['durasi'])[:3]
+        aktivitas_temp = []
+        for act in aktivitas:
+            aktivitas_temp.append(act)
+        aktivitas_temp.sort(key=lambda x: x['durasi'])
+        aktivitas_waktu = aktivitas_temp[:3]
     
-    aktivitas_terurut = sorted(aktivitas_waktu, key=lambda x: (-x['manfaat'], x['durasi']))
+    aktivitas_waktu.sort(key=lambda x: (-x['manfaat'], x['durasi']))
+    aktivitas_terurut = aktivitas_waktu
     
     return aktivitas_terurut, estimasi
 
@@ -373,7 +389,7 @@ def input_waktu_dengan_validasi(profil_anak):
                     else:
                         continue
                 elif status == "melebihi":
-                    print(f"{Fore.RED}⚠ PERINGATAN: Waktu yang dipilih melebihi rekomendasi untuk usia {profil_anak['umur']} tahun!{Style.RESET_ALL}")
+                    print(f"{Fore.RED} PERINGATAN: Waktu yang dipilih melebihi rekomendasi untuk usia {profil_anak['umur']} tahun!{Style.RESET_ALL}")
                     print(f"Rekomendasi maksimal: {estimasi['total_edukasi_max']} menit")
                     print("Waktu belajar yang terlalu lama dapat menyebabkan anak kelelahan dan kehilangan fokus.")
                     
