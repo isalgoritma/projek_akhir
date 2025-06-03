@@ -2,7 +2,6 @@ import os
 from tabulate import tabulate 
 import pyfiglet
 from colorama import Fore, Style
-# import pandas as pd
 
 def clear_screen():
     if os.name == 'nt':
@@ -155,17 +154,14 @@ def input_waktu():
     return waktu_tersedia
 
 def hitung_fokus_preferensi(profil_anak, waktu_tersedia):
-    # Filter aktivitas berdasarkan kategori favorit
+   
     aktivitas_sesuai = [act for act in aktivitas if act['kategori'] == profil_anak['kategori_favorit']]
     
-    # Filter berdasarkan waktu tersedia
     aktivitas_waktu = [act for act in aktivitas_sesuai if act['durasi'] <= waktu_tersedia]
     
-    # Jika tidak ada aktivitas yang sesuai kategori, ambil semua yang sesuai waktu
     if not aktivitas_waktu:
         aktivitas_waktu = [act for act in aktivitas if act['durasi'] <= waktu_tersedia]
     
-    # Urutkan berdasarkan manfaat (tertinggi) dan durasi (terendah)
     aktivitas_terurut = sorted(aktivitas_waktu, key=lambda x: (-x['manfaat'], x['durasi']))
     
     return aktivitas_terurut
@@ -181,7 +177,7 @@ def tampilkan_rekomendasi(profil_anak, rekomendasi):
         print("Maaf, tidak ada aktivitas yang sesuai dengan waktu tersedia.")
         print("Coba tambah waktu atau pilih kategori lain.")
     else:
-        # Ambil top 5 rekomendasi
+       
         top_rekomendasi = rekomendasi[:5]
         
         headers = ["No", "Nama Aktivitas", "Kategori", "Durasi (menit)", "Skor Manfaat"]
@@ -210,10 +206,10 @@ def menu_akhir():
         try:
             pilihan = int(inputan_wajib("Pilih opsi (1-2): "))
             if pilihan == 1:
-                return False  # Kembali ke menu utama
+                return False 
             elif pilihan == 2:
                 print("Terima kasih telah menggunakan EDJUST!")
-                return True   # Keluar program
+                return True   
             else:
                 print("Pilihan harus 1 atau 2!")
         except ValueError:
@@ -238,7 +234,6 @@ def menu_utama():
                 
             elif pilihan == 2:
                 if login():
-                    # Menu setelah login berhasil
                     while True:
                         clear_screen()
                         print("==== DASHBOARD EDJUST ====")
@@ -249,17 +244,15 @@ def menu_utama():
                             sub_pilihan = int(inputan_wajib("Pilih menu (1-2): "))
                             
                             if sub_pilihan == 1:
-                                # Proses rekomendasi
                                 profil = input_profil()
                                 waktu = input_waktu()
                                 rekomendasi = hitung_fokus_preferensi(profil, waktu)
                                 tampilkan_rekomendasi(profil, rekomendasi)
                                 
-                                # Menu akhir
                                 if menu_akhir():
-                                    return  # Keluar program
+                                    return 
                                 else:
-                                    continue  # Kembali ke dashboard
+                                    continue  
                                     
                             elif sub_pilihan == 2:
                                 print("Logout berhasil!")
@@ -281,7 +274,6 @@ def menu_utama():
             print("Pilihan harus berupa angka!")
             input("Tekan Enter untuk melanjutkan...")
 
-# Program utama
 if __name__ == "__main__":
     menu_utama()
 
